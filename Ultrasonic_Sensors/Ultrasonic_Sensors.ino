@@ -1,5 +1,5 @@
-int trigPin = 13;
-int echoPin = 12;
+int trigPin = 12;
+int echoPin = 13;
 int led = 11;
 int led2 = 10;
 
@@ -15,7 +15,7 @@ void loop(){
   long duration, distance;
   digitalWrite(trigPin, LOW); 
   delayMicroseconds(2);
-  digitalWrite(trigPin, LOW);
+  digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
   duration = pulseIn(echoPin, HIGH);
