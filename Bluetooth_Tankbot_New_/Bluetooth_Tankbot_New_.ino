@@ -1,33 +1,33 @@
 /*
 Forward -> F
-Back -> B
+Backwards -> B
 Left -> L
 Right -> R
 Forward Left -> G
 Forward Right -> I
-Back Left ->
+Back Left -> H
 Back Right -> J
 Stop -> S
-Speed 10 -> 1
-Speed 20 -> 2
-Speed 30 -> 3
-Speed 40 -> 4
-Speed 50 -> 5
-Speed 60 -> 6
-Speed 70 -> 7
-Speed 80 -> 8
-Speed 90 -> 9
+Speed 0 -> 0
+Speed 10 -> 0
+Speed 20 -> 0
+Speed 30 -> 0
+Speed 40 -> 0
+Speed 50 -> 0
+Speed 60 -> 0
+Speed 70 -> 0
+Speed 80 -> 0
+Speed 90 -> 0
 Speed 100 -> q
 Stop All -> D
-
 */
+
 
 // Bluetooth Code 
 char dataIn='S';
 char determinant;
-char det; 
-int overdrive = 13; //Press Toggle Switch #1, the pin13 LED will light up
-bool vel = HIGH;
+char det;
+bool vel = HIGH; 
 
 // Motor Ports
 int rightF = 2;
@@ -35,15 +35,18 @@ int rightB = 3;
 int leftF = 4;
 int leftB = 5;
 
+//int power = 4;     // Remove This To Enable Tollge Switch #2
+int overdrive = 13; //Press Toggle Switch #1, the pin13 LED will light up
+
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
   pinMode(overdrive, OUTPUT);
   
-  pinMode(rightF, OUTPUT); // (Green)
-  pinMode(rightB, OUTPUT); // (Blue)
-  pinMode(leftF, OUTPUT); // (Green)
-  pinMode(leftB, OUTPUT); // (Blue)
+  pinMode(rightF, OUTPUT); // Right (Green)
+  pinMode(rightB, OUTPUT); // Right (Blue)
+  pinMode(leftF, OUTPUT); // Left (Green)
+  pinMode(leftB, OUTPUT); // Right (Blue)
   
   digitalWrite(rightF, LOW);
   digitalWrite(rightB, LOW);
@@ -51,7 +54,7 @@ void setup()
   digitalWrite(leftB, LOW);
 }
 
-void forward(int vel)
+void backwards(bool vel)
 {
   digitalWrite(rightF, LOW);
   digitalWrite(rightB, vel);
@@ -59,43 +62,29 @@ void forward(int vel)
   digitalWrite(leftB, vel);
 }
 
-void left(int vel) // One motor
+void left(bool vel) 
 {
   digitalWrite(rightF, vel);
-}
-
-void right(int vel) // One motor
-{
-//  digitalWrite(rightF, LOW);
-//  digitalWrite(rightB, vel);
-  digitalWrite(leftF, vel);
-//  digitalWrite(leftB, LOW);
-}
-
-void backwards(int vel)
-{
-  digitalWrite(rightF, LOW);
-  digitalWrite(rightB, vel);
+  digitalWrite(rightB, LOW);
   digitalWrite(leftF, LOW);
   digitalWrite(leftB, vel);
 }
 
-void forwardLeft()
+void right(bool vel)
 {
-  
+  digitalWrite(rightF, LOW);
+  digitalWrite(rightB, vel);
+  digitalWrite(leftF, vel);
+  digitalWrite(leftB, LOW);
 }
 
-void forwardRight()
+void forward(bool vel)
 {
-  
+  digitalWrite(rightF, vel);
+  digitalWrite(rightB, LOW);
+  digitalWrite(leftF, vel);
+  digitalWrite(leftB, LOW);
 }
-
-void backLeft()
-{
-  
-}
-
-
 
 void brake()
 {
@@ -111,66 +100,58 @@ void loop()
      
       while(det == 'F')   // F, move forward
        {
-         forward(vel);
-         delay(4000);
+         backwards(vel);
          det = check();
        }
      
       while(det == 'B')   // B, move back
        {
-         backwards(vel);
-         delay(1000);
+         forward(vel);
          det = check();
        }
 
-      while(det == 'L')   // L, move wheel left
+      while(det == 'L')   // L, move wheels left
        {
-         left(vel);
-         delay(1000);
+         right(vel);
          det = check();
        }
       
-      while(det == 'R')   // R, move wheel right
+      while(det == 'R')   // R, move wheels right
        {
-          right(vel);
-          delay(1000);
+          left(vel);
           det = check();
        }
     
-      while(det == 'I')   // I, turn right forward
-       {
-          digitalWrite(leftB, vel);
-          delay(2000);
-          det = check();
-       }
-    
-      while(det == 'J')   // J, turn right back
-       {
-          digitalWrite(rightB, vel);
-          delay(2000);
-          det = check();
-       }  
-     
-      while(det == 'G')   // G, turn left forward
-       {
-          digitalWrite(rightB, vel);
-          delay(2000);
-          det = check();
-       }
-    
-      while(det == 'H')   // H, turn left back
-       {
-          digitalWrite(rightB, vel);
-          delay(2000);
-          det = check();
-       }  
-     
+//      while(det == 'I')   // I, turn right forward
+//       {
+//
+//         det = check();
+//       }
+//    
+//      while(det == 'J')   // J, turn right back
+//       {
+//
+//         det = check();
+//       }  
+//     
+//      while(det == 'G')   // G, turn left forward
+//       {
+//
+//         det = check();
+//       }
+//    
+//      while(det == 'H')   // H, turn left back
+//       {
+//
+//         det = check();
+//       }  
+//     
       while(det == 'S')   // S, stop
        {
          brake();
          det = check();
        }
-       
+      
       //---------------------Toggle switch code------------------//
      /* while (det == 'U')  
       {digitalWrite(power, HIGH);det = check();}
@@ -224,16 +205,54 @@ int check()
         {
           determinant = 'S';
         }
+        else if (dataIn == '0')
+        {
+          vel = HIGH;
+        }
+        else if (dataIn == '1')
+        {
+          vel = HIGH;
+        }
+        else if (dataIn == '2')
+        {
+          vel = HIGH;
+        }
+        else if (dataIn == '3')
+        {
+          vel = HIGH;
+        }
+        else if (dataIn == '4')
+        {
+          vel = HIGH;
+        }
+        else if (dataIn == '5')
+        {
+          vel = HIGH;
+        }
+        else if (dataIn == '6')
+        {
+          vel = HIGH;
+        }
+        else if (dataIn == '7')
+        {
+          vel = HIGH;
+        }
+        else if (dataIn == '8')
+        {
+          vel = HIGH;
+        }
+        else if (dataIn == '9')
+        {
+          vel = HIGH;
+        }
+        else if (dataIn == 'q')
+        {
+          vel = LOW;
+        }
         else if (dataIn == 'U')
         {
           determinant = 'U';
         }
-        else if (dataIn == '0'){vel = LOW;}else if (dataIn == '1'){vel = HIGH;}
-        else if (dataIn == '2'){vel = HIGH;}else if (dataIn == '3'){vel = HIGH;}
-        else if (dataIn == '4'){vel = HIGH;}else if (dataIn == '5'){vel = HIGH;}
-        else if (dataIn == '6'){vel = HIGH;}else if (dataIn == '7'){vel = HIGH;}
-        else if (dataIn == '8'){vel = HIGH;}else if (dataIn == '9'){vel = HIGH;}
-        else if (dataIn == 'q'){vel = HIGH;}
         else if (dataIn == 'u')
         {
           determinant = 'u';
